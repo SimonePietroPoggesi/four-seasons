@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Four Season</title>
+    <style>
+      .contact-link {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        color: white;
+        font-size: 20px;
+        text-decoration: none;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 8px 14px;
+        border-radius: 8px;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .contact-link:hover {
+        background-color: white;
+        color: black;
+      }
+
+      body {
+        background-color: black;
+        color: white;
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+      }
+
+      h1 {
+        font-size: 40px;
+        margin-top: 40px;
+      }
+      h2 {
+        font-size: 22px; /* dimensione intermedia */
+        font-style: italic; /* corsivo solo per h2 */
+        color: white;
+        text-align: center;
+        margin-top: 10px;
+      }
+
+      /* --- Schermata di avviso 18+ --- */
+      #age-warning {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+
+      #age-warning h1 {
+        font-size: 50px;
+        margin-bottom: 20px;
+      }
+
+      #enter-btn {
+        background-color: white;
+        color: black;
+        padding: 10px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      #enter-btn:hover {
+        background-color: #444;
+        color: white;
+      }
+
+      /* Galleria immagini */
+      .gallery {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        width: 20vw;
+        height: 70vh;
+        margin: 0 auto;
+        align-items: center;
+        justify-items: center;
+      }
+
+      .gallery img {
+        width: 90%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+        transition: transform 0.3s;
+        cursor: pointer;
+      }
+
+      .gallery img:hover {
+        transform: scale(1.05);
+      }
+
+      /* Popup */
+      .popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.95);
+        z-index: 1000;
+        overflow: auto; /* scroll verticale */
+        text-align: center;
+      }
+
+      .popup img {
+        width: auto;
+        height: auto;
+        max-width: 90%;
+        max-height: 90%;
+        margin: auto;
+        display: block;
+        cursor: pointer;
+      }
+
+      .popup img.fullsize {
+        width: auto;
+        height: auto;
+        max-width: none;
+        max-height: none; /* permette scroll verticale completo */
+      }
+
+      .close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: white;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      #popup-caption {
+        color: white; /* testo bianco */
+        font-size: 28px; /* dimensione leggibile */
+        font-style: italic;
+        margin-top: 10px; /* distanza dall’immagine */
+        text-align: center; /* centrato sotto l’immagine */
+      }
+    </style>
+  </head>
+  <body>
+    <a href="contact.html" class="contact-link">Contact</a>
+
+    <!-- Avviso 18+ -->
+    <div id="age-warning">
+      <h1>Only for 18+</h1>
+      <button id="enter-btn">Enter</button>
+    </div>
+
+    <!-- Contenuto del sito -->
+    <h1>"THE FOUR SEASONS" by Simone Pietro Poggesi</h1>
+    <h2>my first self-made website — a mix of drawings, design and code</h2>
+
+    <div class="gallery">
+      <img src="img/Primavera.jpg" alt="Illustrazione 1" />
+      <img src="img/Estate.jpg" alt="Illustrazione 2" />
+      <img src="img/Autunno.jpg" alt="Illustrazione 3" />
+      <img src="img/Inverno.jpg" alt="Illustrazione 4" />
+    </div>
+
+    <div id="popup" class="popup">
+      <span class="close">&times;</span>
+      <img id="popup-img" src="" />
+      <div id="popup-caption"></div>
+    </div>
+
+    <script>
+      // Gestione avviso 18+
+      const ageWarning = document.getElementById("age-warning");
+      const enterBtn = document.getElementById("enter-btn");
+      enterBtn.addEventListener("click", () => {
+        ageWarning.style.display = "none";
+      });
+
+      // Galleria e popup
+      const images = document.querySelectorAll(".gallery img");
+      const popup = document.getElementById("popup");
+      const popupImg = document.getElementById("popup-img");
+      const closeBtn = document.querySelector(".close");
+      let isFullsize = false;
+
+      images.forEach((img) => {
+        img.addEventListener("click", () => {
+          popup.style.display = "block";
+          popupImg.src = img.src;
+          popupImg.classList.remove("fullsize");
+          isFullsize = false;
+          popup.scrollTop = 0;
+
+          // Aggiungiamo il sottotitolo
+          const captions = {
+            "Primavera.jpg": "Spring",
+            "Estate.jpg": "Summer",
+            "Autunno.jpg": "Autumn",
+            "Inverno.jpg": "Winter",
+          };
+          const fileName = img.src.split("/").pop(); // prende solo il nome file
+          document.getElementById("popup-caption").textContent =
+            captions[fileName] || "";
+        });
+      });
+
+      // Zoom fullsize / scroll verticale
+      popupImg.addEventListener("click", () => {
+        if (!isFullsize) {
+          popupImg.classList.add("fullsize");
+          isFullsize = true;
+        } else {
+          popupImg.classList.remove("fullsize");
+          isFullsize = false;
+        }
+      });
+
+      // Chiusura popup
+      closeBtn.addEventListener("click", () => {
+        popup.style.display = "none";
+        popupImg.classList.remove("fullsize");
+        isFullsize = false;
+      });
+
+      popup.addEventListener("click", (e) => {
+        if (e.target === popup) {
+          popup.style.display = "none";
+          popupImg.classList.remove("fullsize");
+          isFullsize = false;
+        }
+      });
+    </script>
+  </body>
+</html>
+Add index.html
